@@ -1,7 +1,7 @@
 from rest_framework import generics, status
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones
 from rest_framework.response import Response
-from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer, MesasSerializer, ComentariosSerializer
+from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer, MesasSerializer, ComentariosSerializer, NotificacionesSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 
 
@@ -172,6 +172,22 @@ class ComentariosDetail(generics.RetrieveUpdateDestroyAPIView):
 
 ##############################################################################################################################
 
+# ListCreate   
+class NotificacionesListCreate(generics.ListCreateAPIView):
+
+    queryset = Notificaciones.objects.all()
+    serializer_class = NotificacionesSerializer
+
+# Detail
+class NotificacionesDetail(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = Notificaciones.objects.all()
+    serializer_class = NotificacionesSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({'message': 'Notificación eliminada correctamente.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 ##############################################################################################################################

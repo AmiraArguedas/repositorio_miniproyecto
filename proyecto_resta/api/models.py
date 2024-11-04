@@ -126,7 +126,14 @@ class Comentarios(models.Model):
 
 ####################################################################################
 
-
+class Notificaciones(models.Model):
+    notificacion_creada = models.DateTimeField(auto_now_add=True)
+    notificacion_actualizada = models.DateTimeField(auto_now=True)
+    mensaje = models.TextField()
+    leido = models.BooleanField()
+   
+    def __str__(self):
+        return str(self.mensaje)
 
 ####################################################################################
 

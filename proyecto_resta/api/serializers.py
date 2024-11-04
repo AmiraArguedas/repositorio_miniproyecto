@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from datetime import datetime
 import re
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones
 from django.contrib.auth.models import User, Group
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
@@ -168,8 +168,6 @@ class MesasSerializer(serializers.ModelSerializer):
         model = Mesas
         fields = '__all__'
 
-# validaciones 
-
     def validate_capacidad_mesa(self, value): 
         if value <= 0: raise serializers.ValidationError("La capacidad de la mesa debe ser mayor que cero") 
         return value 
@@ -190,8 +188,6 @@ class ComentariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comentarios
         fields = '__all__'
-
-# validaciones 
     
     def validate_comentario(self, value): 
         if not value: raise serializers.ValidationError("El comentario no puede estar vacío") 
@@ -204,7 +200,6 @@ class ComentariosSerializer(serializers.ModelSerializer):
         if value < 1 or value > 5: raise serializers.ValidationError("La calificación debe estar entre 1 y 5") 
         return value 
     
-    
     def validate_id_menu_comentarios(self, value): 
         if not Menu.objects.filter(id=value.id).exists(): 
             raise serializers.ValidationError("El menú especificado no existe") 
@@ -212,7 +207,17 @@ class ComentariosSerializer(serializers.ModelSerializer):
         
 ###################################################################################################################
 
+class NotificacionesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notificaciones
+        fields = '__all__'
 
+    def validate_mensaje(self, value): 
+        if not value: 
+            raise serializers.ValidationError("El mensaje no puede estar vacío.") 
+        if len(value) > 500: 
+            raise serializers.ValidationError("El mensaje no puede exceder los 500 caracteres") 
+        return value 
     
 ################################################################################################################### 
     

@@ -19,8 +19,10 @@ urlpatterns = [
     path('estadomesas/<int:pk>/', views.MesasEstadoDetail.as_view(), name='estadomesas-detail'),
     path('mesas/', views.MesasListCreate.as_view(), name='mesas-list'),
     path('mesas/<int:pk>/', views.MesasDetail.as_view(), name='mesas-detail'),
-    path('comentarios/', views.ComentariosListCreate.as_view(), name='mesas-list'),
-    path('comentarios/<int:pk>/', views.ComentariosDetail.as_view(), name='mesas-detail'),
+    path('comentarios/', views.ComentariosListCreate.as_view(), name='comentarios-list'),
+    path('comentarios/<int:pk>/', views.ComentariosDetail.as_view(), name='comentarios-detail'),
+    path('notificaciones/', views.NotificacionesListCreate.as_view(), name='notificaciones-list'),
+    path('notificaciones/<int:pk>/', views.NotificacionesDetail.as_view(), name='notificaciones-detail'),
 
 
 
