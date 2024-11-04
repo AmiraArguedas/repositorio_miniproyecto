@@ -149,18 +149,17 @@ class Reserva(models.Model):
 
 ####################################################################################
 
+class Factura(models.Model):
+    fecha_emision = models.DateTimeField(auto_now_add=True) 
+    factura_actualizada = models.DateTimeField(auto_now=True)
+    total_factura = models.DecimalField(max_digits=10, decimal_places=2, default=0.0) 
+    metodo_pago = models.ForeignKey(MetodoDePago, on_delete=models.CASCADE) 
+    mesa = models.ForeignKey(Mesas, on_delete=models.CASCADE)  
 
-
-####################################################################################
-
-
-
-####################################################################################
-
-
-
-####################################################################################
-
-
+    def __str__(self):
+        return f"Factura {self.pk} - Total {self.total_factura} - MetodoDePago {self.metodo_pago.tipo_pago}"
 
 ####################################################################################
+
+
+

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from datetime import datetime
 import re
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones, Reserva
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones, Reserva, Factura
 from django.contrib.auth.models import User, Group
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
@@ -237,4 +237,39 @@ class ReservaSerializer(serializers.ModelSerializer):
 
         return attrs
         
-###################################################################################################################    
+###################################################################################################################  
+
+class FacturaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Factura
+        fields = '__all__'
+        read_only_fields = ['fecha_emision', 'total_factura']
+
+# validaciones 
+        
+        def validate_usuario(self, value):
+            if value is None:
+                raise serializers.ValidationError("El usuario no puede ser nulo")
+            return value
+        
+        def validate_detalles_pedido(self, value):
+            if not value.exists():
+                raise serializers.ValidationError("Debe haber al menos un detalle de pedido.")
+            return value   
+        
+        def to_representation(self, instance):
+            representation = super().to_representation(instance)
+            
+            total = sum(detalle.total for detalle in instance.detallepedido_set.all())
+            representation['total_factura'] = total
+            
+            return representation
+
+        def create(self, validated_data):
+            factura = Factura.objects.create(**validated_data)
+            
+            factura.total_factura = sum(detalle.total for detalle in factura.detallepedido_set.all())
+            factura.save()
+            
+            return factura    
+  

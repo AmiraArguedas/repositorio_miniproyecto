@@ -25,7 +25,8 @@ urlpatterns = [
     path('notificaciones/<int:pk>/', views.NotificacionesDetail.as_view(), name='notificaciones-detail'),
     path('reservas/', views.ReservaListCreate.as_view(), name='reserva-list'),
     path('reservas/<int:pk>/', views.ReservaDetail.as_view(), name='reserva-detail'),
-
+    path('facturas/', views.ReservaListCreate.as_view(), name='facturas-list'),
+    path('facturas/<int:pk>/', views.ReservaDetail.as_view(), name='facturas-detail'),
 
 
 
