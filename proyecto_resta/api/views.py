@@ -39,10 +39,12 @@ class CategoriaMenuDetail(generics.RetrieveUpdateDestroyAPIView):
 class MenuListCreate(generics.ListCreateAPIView):
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador | IsCliente]
 
 class MenuDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -54,10 +56,12 @@ class MenuDetail(generics.RetrieveUpdateDestroyAPIView):
 class HistorialEstadosListCreate(generics.ListCreateAPIView):
     queryset = HistorialEstados.objects.all()
     serializer_class = HistorialEstadosSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
 class HistorialEstadosDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = HistorialEstados.objects.all()
     serializer_class = HistorialEstadosSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -70,31 +74,37 @@ class HistorialEstadosDetail(generics.RetrieveUpdateDestroyAPIView):
 class PedidoListCreate(generics.ListCreateAPIView):
     queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador | IsCliente]
 
 class PedidoDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
 ##############################################################################################################################
 
 class PromocionListCreate(generics.ListCreateAPIView):
     queryset = Promocion.objects.all()
     serializer_class = PromocionSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
 class PromocionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Promocion.objects.all()
     serializer_class = PromocionSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
 ##############################################################################################################################
 
 class MetodoDePagoListCreate(generics.ListCreateAPIView):
     queryset = MetodoDePago.objects.all()
     serializer_class = MetodoDePagoSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
 
 class MetodoDePagoDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = MetodoDePago.objects.all()
     serializer_class = MetodoDePagoSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -107,6 +117,7 @@ class MetodoDePagoDetail(generics.RetrieveUpdateDestroyAPIView):
 class MesasEstadoListCreate(generics.ListCreateAPIView):
     queryset = MesasEstado.objects.all()
     serializer_class = MesasEstadoSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
     def create(self, request, *args, **kwargs):
 
@@ -122,6 +133,7 @@ class MesasEstadoListCreate(generics.ListCreateAPIView):
 class MesasEstadoDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = MesasEstado.objects.all()
     serializer_class = MesasEstadoSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
     def update(self, request, *args, **kwargs):
         # Validación adicional en la actualización
@@ -141,11 +153,13 @@ class MesasEstadoDetail(generics.RetrieveUpdateDestroyAPIView):
 class MesasListCreate(generics.ListCreateAPIView):
     queryset = Mesas.objects.all()
     serializer_class = MesasSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
 # Detail
 class MesasDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Mesas.objects.all()
     serializer_class = MesasSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -158,11 +172,13 @@ class MesasDetail(generics.RetrieveUpdateDestroyAPIView):
 class ComentariosListCreate(generics.ListCreateAPIView):
     queryset = Comentarios.objects.all()
     serializer_class = ComentariosSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador | IsCliente]
 
 # Detail
 class ComentariosDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comentarios.objects.all()
     serializer_class = ComentariosSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador | IsCliente]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -174,15 +190,15 @@ class ComentariosDetail(generics.RetrieveUpdateDestroyAPIView):
 
 # ListCreate   
 class NotificacionesListCreate(generics.ListCreateAPIView):
-
     queryset = Notificaciones.objects.all()
     serializer_class = NotificacionesSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
 # Detail
 class NotificacionesDetail(generics.RetrieveUpdateDestroyAPIView):
-
     queryset = Notificaciones.objects.all()
     serializer_class = NotificacionesSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -196,11 +212,13 @@ class NotificacionesDetail(generics.RetrieveUpdateDestroyAPIView):
 class ReservaListCreate(generics.ListCreateAPIView):
     queryset = Reserva.objects.all()
     serializer_class = ReservaSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador | IsCliente]
 
 # Detail
 class ReservaDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Reserva.objects.all()
     serializer_class = ReservaSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -210,15 +228,15 @@ class ReservaDetail(generics.RetrieveUpdateDestroyAPIView):
 ##############################################################################################################################
 
 class FacturaListCreate(generics.ListCreateAPIView):
-
     queryset = Factura.objects.all()
     serializer_class = FacturaSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
 # Detail
 class FacturaDetail(generics.RetrieveUpdateDestroyAPIView):
-
     queryset = Factura.objects.all()
     serializer_class = FacturaSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -229,15 +247,15 @@ class FacturaDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class DetallePedidoListCreate(generics.ListCreateAPIView):
-
     queryset = DetallePedido.objects.all()
     serializer_class = DetallePedidoSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
 
 # Detail
 class DetallePedidoDetail(generics.RetrieveUpdateDestroyAPIView):
-
     queryset = DetallePedido.objects.all()
     serializer_class = DetallePedidoSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador]
     
 
     def destroy(self, request, *args, **kwargs):
@@ -245,7 +263,23 @@ class DetallePedidoDetail(generics.RetrieveUpdateDestroyAPIView):
         instance.delete()
         return Response({'message': 'Detalle de pedido eliminado correctamente.'}, status=status.HTTP_204_NO_CONTENT)
 
+##############################################################################################################################
 
+class PedidoPorUsuario(generics.ListAPIView):
+    serializer_class = PedidoSerializer
+
+    def get_queryset(self):
+        id_cliente = self.kwargs['id_cliente']
+        return Pedido.objects.filter(cliente_fk=id_cliente)
+
+##############################################################################################################################
+
+class ComentarioPorUsuario(generics.ListAPIView):
+    serializer_class = ComentariosSerializer
+
+    def get_queryset(self):
+        usuario_id = self.kwargs['usuario_id']
+        return Comentarios.objects.filter(cliente_fk=usuario_id)
 
 
 

@@ -29,8 +29,8 @@ urlpatterns = [
     path('facturas/<int:pk>/', views.FacturaDetail.as_view(), name='facturas-detail'),
     path('detallespedido/', views.DetallePedidoListCreate.as_view(), name='detallespedido-list'),
     path('detallespedido/<int:pk>/', views.DetallePedidoDetail.as_view(), name='detallespedido-detail'),
-
-
+    path('pedidos/cliente/<int:id_cliente>/', views.PedidoPorUsuario.as_view(), name='pedidos_por_usuario'),
+    path('comentarios/usuario/<int:usuario_id>/', views.ComentarioPorUsuario.as_view(), name='comentarios_por_usuario'),
 
 
 ]

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import datetime
+from django.contrib.auth.models import User
 
 class CategoriaMenu(models.Model):
     categoria_creada = models.DateTimeField(auto_now_add=True)
@@ -20,7 +21,7 @@ class Menu(models.Model):
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     disponibilidad = models.BooleanField(default=True)
-    id_categoria = models.ForeignKey(CategoriaMenu, on_delete=models.CASCADE)
+    categoria_fk = models.ForeignKey(CategoriaMenu, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.nombre} - ${self.precio}"
@@ -41,7 +42,6 @@ class HistorialEstados(models.Model):
     ]
 
     estado = models.CharField(max_length=20, choices=ESTADOS_CHOICES, default=ESTADO_PREPARACION)
-    fecha_cambio = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
         return f"Historial {self.pk} - Estado {self.estado}"
@@ -52,7 +52,8 @@ class Pedido(models.Model):
     pedido_creado = models.DateTimeField(auto_now_add=True)
     pedido_actualizado = models.DateTimeField(auto_now=True)
     fecha_pedido = models.DateTimeField(auto_now_add=True)
-    id_estado = models.ForeignKey(HistorialEstados, on_delete=models.CASCADE)
+    estado_fk = models.ForeignKey(HistorialEstados, on_delete=models.CASCADE)
+    cliente_fk = models.ForeignKey(User, on_delete=models.CASCADE)  
 
     def __str__(self):
         return f"Pedido {self.pk} - Fecha {self.fecha_pedido}"
@@ -66,7 +67,7 @@ class Promocion(models.Model):
     descripcion = models.TextField()
     descuento = models.IntegerField()
     fecha_vencimiento = models.DateTimeField()
-    id_menu = models.ForeignKey(Menu, on_delete=models.CASCADE) 
+    menu_fk = models.ForeignKey(Menu, on_delete=models.CASCADE) 
 
     def __str__(self):
         return f"Promoción {self.nombre} - {self.id_menu}"
@@ -107,7 +108,7 @@ class Mesas(models.Model):
     mesa_actualizada = models.DateTimeField(auto_now=True)
     numero_mesa = models.IntegerField()
     capacidad_mesa = models.IntegerField()
-    disponiblilidad_mesa = models.ForeignKey(MesasEstado, on_delete=models.CASCADE)
+    estado_mesa_fk = models.ForeignKey(MesasEstado, on_delete=models.CASCADE)
    
     def __str__(self):
         return str(self.numero_mesa)
@@ -119,7 +120,8 @@ class Comentarios(models.Model):
     comentario_actualizado = models.DateTimeField(auto_now=True)
     comentario = models.TextField()
     calificacion = models.IntegerField()
-    id_menu_comentarios = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    menu_fk = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    cliente_fk = models.ForeignKey(User, on_delete=models.CASCADE)  
    
     def __str__(self):
         return str(self.comentario)
@@ -131,6 +133,7 @@ class Notificaciones(models.Model):
     notificacion_actualizada = models.DateTimeField(auto_now=True)
     mensaje = models.TextField()
     leido = models.BooleanField()
+    cliente_fk = models.ForeignKey(User, on_delete=models.CASCADE)
    
     def __str__(self):
         return str(self.mensaje)
@@ -140,9 +143,10 @@ class Notificaciones(models.Model):
 class Reserva(models.Model):
     reserva_creada = models.DateTimeField(auto_now_add=True)
     reserva_actualizada = models.DateTimeField(auto_now=True)
-    id_mesa = models.ForeignKey(Mesas, on_delete=models.CASCADE)
-    id_metodo_pago = models.ForeignKey(MetodoDePago, on_delete=models.CASCADE)
+    mesa_fk = models.ForeignKey(Mesas, on_delete=models.CASCADE)
+    metodo_pago_fk = models.ForeignKey(MetodoDePago, on_delete=models.CASCADE)
     fecha_reserva = models.DateTimeField()
+    cliente_fk = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Reserva {self.pk}"
@@ -153,8 +157,9 @@ class Factura(models.Model):
     fecha_emision = models.DateTimeField(auto_now_add=True) 
     factura_actualizada = models.DateTimeField(auto_now=True)
     total_factura = models.DecimalField(max_digits=10, decimal_places=2, default=0.0) 
-    metodo_pago = models.ForeignKey(MetodoDePago, on_delete=models.CASCADE) 
-    mesa = models.ForeignKey(Mesas, on_delete=models.CASCADE)  
+    metodo_pago_fk = models.ForeignKey(MetodoDePago, on_delete=models.CASCADE) 
+    mesa_fk = models.ForeignKey(Mesas, on_delete=models.CASCADE)  
+    cliente_fk = models.ForeignKey(User, on_delete=models.CASCADE)  
 
     def __str__(self):
         return f"Factura {self.pk} - Total {self.total_factura} - MetodoDePago {self.metodo_pago.tipo_pago}"
@@ -168,10 +173,10 @@ class DetallePedido(models.Model):
     subtotal = models.IntegerField()
     iva = models.IntegerField()
     total = models.IntegerField()
-    id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
-    id_menu = models.ForeignKey('Menu', on_delete=models.CASCADE)
-    factura = models.ForeignKey('Factura', on_delete=models.CASCADE, null=True, blank=True)
-    id_promocion = models.ForeignKey('Promocion', on_delete=models.SET_NULL, null=True, blank=True)
+    pedido_fk = models.ForeignKey('Pedido', on_delete=models.CASCADE)
+    menu_fk = models.ForeignKey('Menu', on_delete=models.CASCADE)
+    factura_fk = models.ForeignKey('Factura', on_delete=models.CASCADE, null=True, blank=True)
+    promocion_fk = models.ForeignKey('Promocion', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"Total: ${self.total}"
