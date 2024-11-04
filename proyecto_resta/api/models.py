@@ -59,7 +59,17 @@ class Pedido(models.Model):
 
 ####################################################################################
 
+class Promocion(models.Model):
+    promocion_creado = models.DateTimeField(auto_now_add=True)
+    promocion_actualizado = models.DateTimeField(auto_now=True)
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    descuento = models.IntegerField()
+    fecha_vencimiento = models.DateTimeField()
+    id_menu = models.ForeignKey(Menu, on_delete=models.CASCADE) 
 
+    def __str__(self):
+        return f"Promoción {self.nombre} - {self.id_menu}"
 
 ####################################################################################
 

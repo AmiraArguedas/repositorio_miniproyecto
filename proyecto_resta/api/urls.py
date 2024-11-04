@@ -11,7 +11,8 @@ urlpatterns = [
     path('historialestados/<int:pk>/', views.HistorialEstadosDetail.as_view(), name='historialestados-detail'),
     path('pedidos/', views.PedidoListCreate.as_view(), name='pedidos-list'), 
     path('pedidos/<int:pk>/', views.PedidoDetail.as_view(), name='pedidos-detail'), 
-
+    path('promociones/', views.PromocionListCreate.as_view(), name='promociones-list'), 
+    path('promociones/<int:pk>/', views.PromocionDetail.as_view(), name='promociones-detail'), 
 
 
 

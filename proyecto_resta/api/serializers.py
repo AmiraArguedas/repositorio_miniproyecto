@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from datetime import datetime
 import re
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion
 from django.contrib.auth.models import User, Group
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
@@ -55,9 +55,7 @@ class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
         fields = '__all__'
-
-# validaciones 
-
+        
     def validate_nombre(self, value):
         
         if not value.strip():
@@ -89,8 +87,6 @@ class HistorialEstadosSerializer(serializers.ModelSerializer):
     class Meta:
         model = HistorialEstados
         fields = '__all__'
-        
-# validaciones 
 
         def validate_estado(self, value):
             validate_states = ['preparación', 'enviado', 'entregado']
@@ -113,8 +109,6 @@ class PedidoSerializer(serializers.ModelSerializer):
         model = Pedido
         fields = '__all__'
 
-# validaciones 
-
     def validate_precio(self, value):
         if value <= 0:
             raise serializers.values("El precio debe ser mayor a cero")
@@ -122,7 +116,19 @@ class PedidoSerializer(serializers.ModelSerializer):
     
 ################################################################################################################### 
     
-    
+class PromocionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Promocion
+        fields = '__all__'
+
+    def validate(self, attrs):
+        if not (0 <= attrs['descuento'] <= 100):
+            raise serializers.ValidationError({"descuento": "El descuento debe estar entre 0 y 100."})
+        
+        if attrs['fecha_vencimiento'] < timezone.now():
+            raise serializers.ValidationError({"fecha_vencimiento": "La fecha de vencimiento no puede ser en el pasado."})
+
+        return attrs
         
 ###################################################################################################################   
 
