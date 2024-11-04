@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from datetime import datetime
 import re
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado
 from django.contrib.auth.models import User, Group
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
@@ -151,7 +151,15 @@ class MetodoDePagoSerializer(serializers.ModelSerializer):
     
 ################################################################################################################### 
     
+class MesasEstadoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MesasEstado
+        fields = ['id', 'nombre_estado']
     
+    def validate_estado(self, value):
+        if value not in ['disponible', 'reservada', 'Disponible', 'Reservada']:
+            raise serializers.ValidationError("El estado debe ser 'disponible' o 'reservada'.")
+        return value
         
 ###################################################################################################################
 

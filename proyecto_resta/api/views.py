@@ -1,7 +1,7 @@
-from rest_framework import generics
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago
+from rest_framework import generics, status
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado
 from rest_framework.response import Response
-from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer
+from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 
 
@@ -104,8 +104,38 @@ class MetodoDePagoDetail(generics.RetrieveUpdateDestroyAPIView):
 
 ##############################################################################################################################
 
+class MesasEstadoListCreate(generics.ListCreateAPIView):
+    queryset = MesasEstado.objects.all()
+    serializer_class = MesasEstadoSerializer
 
+    def create(self, request, *args, **kwargs):
 
+        nombre_estado = request.data.get('nombre_estado')
+        if nombre_estado not in ['disponible', 'reservada', 'Disponible', 'Reservada']:
+            return Response({'error': "El estado debe ser 'disponible' o 'reservada'"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class MesasEstadoDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MesasEstado.objects.all()
+    serializer_class = MesasEstadoSerializer
+
+    def update(self, request, *args, **kwargs):
+        # Validación adicional en la actualización
+        estado = request.data.get('estado')
+        if estado and estado not in ['disponible', 'reservada']:
+            return Response({'error': "El estado debe ser 'disponible' o 'reservada'."}, status=status.HTTP_400_BAD_REQUEST)
+
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({'message': 'Estado de mesa eliminado correctamente.'}, status=status.HTTP_204_NO_CONTENT)
+    
 ##############################################################################################################################
 
 

@@ -82,11 +82,23 @@ class MetodoDePago(models.Model):
 
 
     def __str__(self):
-        return self.tipo_pag
+        return self.tipo_pago
 
 ####################################################################################
 
+class MesasEstado(models.Model):
+    ESTADO_CHOICES = [
+        ('disponible', 'Disponible'),
+        ('reservada', 'Reservada'),
+        ('Disponible', 'disponible'),
+        ('Reservada', 'reservada'),
+    ]
+    estado_mesa_creado = models.DateTimeField(auto_now_add=True)
+    estado_mesa_actualizado = models.DateTimeField(auto_now=True)
+    nombre_estado = models.CharField(max_length=50, choices=ESTADO_CHOICES)
 
+    def __str__(self):
+        return self.nombre_estado
 
 ####################################################################################
 
