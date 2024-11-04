@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from datetime import datetime
 import re
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas
 from django.contrib.auth.models import User, Group
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
@@ -163,7 +163,26 @@ class MesasEstadoSerializer(serializers.ModelSerializer):
         
 ###################################################################################################################
 
+class MesasSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mesas
+        fields = '__all__'
 
+# validaciones 
+
+    def validate_capacidad_mesa(self, value): 
+        if value <= 0: raise serializers.ValidationError("La capacidad de la mesa debe ser mayor que cero") 
+        return value 
+    
+    def validate_numero_mesa(self, value): 
+        if Mesas.objects.filter(numero_mesa=value).exists(): 
+            raise serializers.ValidationError("Ya existe una mesa con este número") 
+        return value 
+    
+    def validate_disponibilidad_mesa(self, value): 
+        if value.estado == 'Reservada': 
+            raise serializers.ValidationError("No se puede agregar una mesa que esté reservada") 
+        return value
     
 ################################################################################################################### 
     

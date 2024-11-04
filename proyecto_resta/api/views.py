@@ -1,7 +1,7 @@
 from rest_framework import generics, status
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas
 from rest_framework.response import Response
-from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer
+from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer, MesasSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 
 
@@ -138,7 +138,20 @@ class MesasEstadoDetail(generics.RetrieveUpdateDestroyAPIView):
     
 ##############################################################################################################################
 
+class MesasListCreate(generics.ListCreateAPIView):
+    queryset = Mesas.objects.all()
+    serializer_class = MesasSerializer
 
+# Detail
+class MesasDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Mesas.objects.all()
+    serializer_class = MesasSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({'message': 'Mesa eliminada correctamente.'}, status=status.HTTP_204_NO_CONTENT)
+   
 
 ##############################################################################################################################
 
