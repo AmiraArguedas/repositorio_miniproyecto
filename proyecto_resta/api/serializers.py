@@ -5,6 +5,31 @@ import re
 from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones, Reserva, Factura, DetallePedido
 from django.contrib.auth.models import User, Group
 
+class UserRegisterSerializer(serializers.ModelSerializer):
+    role = serializers.CharField(write_only = True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'email', 'first_name', 'last_name', 'role')
+
+    def create(self, validated_data):
+        role = validated_data.pop('role')
+        user = User(**validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+
+        if role: 
+            try:
+                group = Group.objects.get(name = role)
+                user.groups.add(group)
+
+            except Group.DoesNotExist:
+                raise serializers.ValidationError(f"El role '{role}' no existe")
+
+        return user
+
+###################################################################################################################
+
 class CategoriaMenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoriaMenu
@@ -23,32 +48,6 @@ class CategoriaMenuSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Este campo solo debe contener letras y espacios.")
             return value
         
-###################################################################################################################
-        
-class UserRegisterSerializer(serializers.ModelSerializer):
-    role = serializers.CharField(write_only = True)
-    
-    class Meta:
-        model = User
-        fields = ('username', 'password', 'email', 'first_name', 'last_name', 'role')
-        
-    def create(self, validated_data):
-        role = validated_data.pop('role')
-        user = User(**validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
-        
-        if role: 
-            try:
-                group = Group.objects.get(name = role)
-                user.groups.add(group)
-                
-            except Group.DoesNotExist:
-                raise serializers.ValidationError(f"El role '{role}' no existe")
-            
-        return user
-
-    
 ###################################################################################################################
     
 class MenuSerializer(serializers.ModelSerializer):
@@ -137,8 +136,6 @@ class MetodoDePagoSerializer(serializers.ModelSerializer):
         model = MetodoDePago
         fields = '__all__'
 
-# validaciones 
-
         def validate_total_compra(self, value):
             if value <= 0:
                 raise serializers.ValidationError("El total de la compra debe ser un número positivo.")
@@ -226,8 +223,6 @@ class ReservaSerializer(serializers.ModelSerializer):
         model = Reserva
         fields = '__all__'
 
-# validaciones 
-
     def validate(self, attrs):
         if attrs['fecha_reserva'] < timezone.now():
             raise serializers.ValidationError({"fecha_reserva": "La fecha de reserva no puede ser en el pasado."})
@@ -272,7 +267,6 @@ class FacturaSerializer(serializers.ModelSerializer):
             return factura    
 
 ###################################################################################################################  
-
 
 class DetallePedidoSerializer(serializers.ModelSerializer):
     class Meta:

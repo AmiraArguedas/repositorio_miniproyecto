@@ -3,7 +3,7 @@ from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, Me
 from rest_framework.response import Response
 from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer, MesasSerializer, ComentariosSerializer, NotificacionesSerializer, ReservaSerializer, FacturaSerializer, DetallePedidoSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
-
+from django.contrib.auth.models import User
 
 class IsAdministrador(BasePermission):
     def has_permission(self, request, view):
@@ -13,9 +13,20 @@ class IsCliente(BasePermission):
     def has_permission(self, request, view):
         return request.user and request.user.groups.filter(name="Cliente").exists() 
     
-class UserRegisterView(generics.CreateAPIView):
+class UserListCreate(generics.ListCreateAPIView):
+    queryset = User.objects.all()
     serializer_class = UserRegisterSerializer
-    permission_classes = [AllowAny] 
+    permission_classes = [IsAuthenticated, IsAdministrador]
+    
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegisterSerializer
+    permission_classes = [IsAuthenticated, IsAdministrador] 
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({'message': 'Categoría de menú eliminada correctamente.'}, status=status.HTTP_204_NO_CONTENT)
 
 ##############################################################################################################################
 
@@ -280,17 +291,3 @@ class ComentarioPorUsuario(generics.ListAPIView):
     def get_queryset(self):
         usuario_id = self.kwargs['usuario_id']
         return Comentarios.objects.filter(cliente_fk=usuario_id)
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,4 @@
 from django.db import models
-from django.utils import timezone
-from datetime import datetime
 from django.contrib.auth.models import User
 
 class CategoriaMenu(models.Model):
@@ -180,4 +178,3 @@ class DetallePedido(models.Model):
 
     def __str__(self):
         return f"Total: ${self.total}"
-
