@@ -137,7 +137,15 @@ class Notificaciones(models.Model):
 
 ####################################################################################
 
+class Reserva(models.Model):
+    reserva_creada = models.DateTimeField(auto_now_add=True)
+    reserva_actualizada = models.DateTimeField(auto_now=True)
+    id_mesa = models.ForeignKey(Mesas, on_delete=models.CASCADE)
+    id_metodo_pago = models.ForeignKey(MetodoDePago, on_delete=models.CASCADE)
+    fecha_reserva = models.DateTimeField()
 
+    def __str__(self):
+        return f"Reserva {self.pk}"
 
 ####################################################################################
 

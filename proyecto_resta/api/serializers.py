@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from datetime import datetime
 import re
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones, Reserva
 from django.contrib.auth.models import User, Group
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
@@ -221,6 +221,20 @@ class NotificacionesSerializer(serializers.ModelSerializer):
     
 ################################################################################################################### 
     
-    
+class ReservaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reserva
+        fields = '__all__'
+
+# validaciones 
+
+    def validate(self, attrs):
+        if attrs['fecha_reserva'] < timezone.now():
+            raise serializers.ValidationError({"fecha_reserva": "La fecha de reserva no puede ser en el pasado."})
+        
+        if not Mesas.objects.filter(id=attrs['id_mesa'].id).exists():
+            raise serializers.ValidationError({"id_mesa": "La mesa especificada no existe."})
+
+        return attrs
         
 ###################################################################################################################    

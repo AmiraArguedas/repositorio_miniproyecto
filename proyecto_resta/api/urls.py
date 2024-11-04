@@ -23,7 +23,8 @@ urlpatterns = [
     path('comentarios/<int:pk>/', views.ComentariosDetail.as_view(), name='comentarios-detail'),
     path('notificaciones/', views.NotificacionesListCreate.as_view(), name='notificaciones-list'),
     path('notificaciones/<int:pk>/', views.NotificacionesDetail.as_view(), name='notificaciones-detail'),
-
+    path('reservas/', views.ReservaListCreate.as_view(), name='reserva-list'),
+    path('reservas/<int:pk>/', views.ReservaDetail.as_view(), name='reserva-detail'),
 
 
 

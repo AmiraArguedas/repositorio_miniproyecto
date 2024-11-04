@@ -1,7 +1,7 @@
 from rest_framework import generics, status
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones, Reserva
 from rest_framework.response import Response
-from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer, MesasSerializer, ComentariosSerializer, NotificacionesSerializer
+from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer, MesasSerializer, ComentariosSerializer, NotificacionesSerializer, ReservaSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 
 
@@ -192,6 +192,20 @@ class NotificacionesDetail(generics.RetrieveUpdateDestroyAPIView):
 
 ##############################################################################################################################
 
+# ListCreate   
+class ReservaListCreate(generics.ListCreateAPIView):
+    queryset = Reserva.objects.all()
+    serializer_class = ReservaSerializer
+
+# Detail
+class ReservaDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Reserva.objects.all()
+    serializer_class = ReservaSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({'message': 'Reserva eliminada correctamente.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 
