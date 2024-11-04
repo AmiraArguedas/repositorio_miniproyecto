@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from datetime import datetime
 import re
-from .models import CategoriaMenu, Menu
+from .models import CategoriaMenu, Menu, HistorialEstados
 from django.contrib.auth.models import User, Group
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
@@ -47,6 +47,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(f"El role '{role}' no existe")
             
         return user
+
     
 ###################################################################################################################
     
@@ -84,4 +85,57 @@ class MenuSerializer(serializers.ModelSerializer):
     
 ################################################################################################################### 
     
+class HistorialEstadosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HistorialEstados
+        fields = '__all__'
+        
+# validaciones 
+
+        def validate_estado(self, value):
+            validate_states = ['preparación', 'enviado', 'entregado']
+            if value not in validate_states:
+                raise serializers.ValidationError("Estado no válido. Opciones: 'preparación', 'enviado', 'entregado'.")
+            return value
+        
+        def cambiar_estado(self, nuevo_estado):
+        
+            if nuevo_estado not in dict(self.ESTADOS_CHOICES):
+                raise ValueError("Estado no válido.")
+            self.estado = nuevo_estado
+            self.fecha_cambio = timezone.now()
+            self.save()
+        
+###################################################################################################################
+  
+  
     
+################################################################################################################### 
+    
+    
+        
+###################################################################################################################   
+
+
+    
+################################################################################################################### 
+    
+    
+        
+###################################################################################################################
+
+
+    
+################################################################################################################### 
+    
+    
+        
+###################################################################################################################
+
+
+    
+################################################################################################################### 
+    
+    
+        
+###################################################################################################################    

@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+from datetime import datetime
 
 class CategoriaMenu(models.Model):
     categoria_creada = models.DateTimeField(auto_now_add=True)
@@ -8,6 +10,8 @@ class CategoriaMenu(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+####################################################################################
 
 class Menu(models.Model):
     menu_creado = models.DateTimeField(auto_now_add=True)
@@ -21,3 +25,49 @@ class Menu(models.Model):
     def __str__(self):
         return f"{self.nombre} - ${self.precio}"
 
+####################################################################################
+
+class HistorialEstados(models.Model):   
+    historial_creado = models.DateTimeField(auto_now_add=True)
+    historial_actualizado = models.DateTimeField(auto_now=True)
+    ESTADO_PREPARACION = 'preparación'
+    ESTADO_ENVIADO = 'enviado'
+    ESTADO_ENTREGADO = 'entregado'
+
+    ESTADOS_CHOICES = [
+        (ESTADO_PREPARACION, 'Preparación'),
+        (ESTADO_ENVIADO, 'Enviado'),
+        (ESTADO_ENTREGADO, 'Entregado')
+    ]
+
+    estado = models.CharField(max_length=20, choices=ESTADOS_CHOICES, default=ESTADO_PREPARACION)
+    fecha_cambio = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return f"Historial {self.pk} - Estado {self.estado}"
+
+####################################################################################
+
+
+
+####################################################################################
+
+
+
+####################################################################################
+
+
+
+####################################################################################
+
+
+
+####################################################################################
+
+
+
+####################################################################################
+
+
+
+####################################################################################
