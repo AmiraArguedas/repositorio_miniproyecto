@@ -25,9 +25,10 @@ urlpatterns = [
     path('notificaciones/<int:pk>/', views.NotificacionesDetail.as_view(), name='notificaciones-detail'),
     path('reservas/', views.ReservaListCreate.as_view(), name='reserva-list'),
     path('reservas/<int:pk>/', views.ReservaDetail.as_view(), name='reserva-detail'),
-    path('facturas/', views.ReservaListCreate.as_view(), name='facturas-list'),
-    path('facturas/<int:pk>/', views.ReservaDetail.as_view(), name='facturas-detail'),
-
+    path('facturas/', views.FacturaListCreate.as_view(), name='facturas-list'),
+    path('facturas/<int:pk>/', views.FacturaDetail.as_view(), name='facturas-detail'),
+    path('detallespedido/', views.DetallePedidoListCreate.as_view(), name='detallespedido-list'),
+    path('detallespedido/<int:pk>/', views.DetallePedidoDetail.as_view(), name='detallespedido-detail'),
 
 
 

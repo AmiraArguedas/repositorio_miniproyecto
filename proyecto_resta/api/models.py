@@ -161,5 +161,18 @@ class Factura(models.Model):
 
 ####################################################################################
 
+class DetallePedido(models.Model):
+    detalle_pedido_creado = models.DateTimeField(auto_now_add=True)
+    detalle_pedido_actualizado = models.DateTimeField(auto_now=True)
+    cantidad = models.IntegerField()
+    subtotal = models.IntegerField()
+    iva = models.IntegerField()
+    total = models.IntegerField()
+    id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
+    id_menu = models.ForeignKey('Menu', on_delete=models.CASCADE)
+    factura = models.ForeignKey('Factura', on_delete=models.CASCADE, null=True, blank=True)
+    id_promocion = models.ForeignKey('Promocion', on_delete=models.SET_NULL, null=True, blank=True)
 
+    def __str__(self):
+        return f"Total: ${self.total}"
 

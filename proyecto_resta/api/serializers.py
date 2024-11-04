@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from datetime import datetime
 import re
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones, Reserva, Factura
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones, Reserva, Factura, DetallePedido
 from django.contrib.auth.models import User, Group
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
@@ -244,8 +244,6 @@ class FacturaSerializer(serializers.ModelSerializer):
         model = Factura
         fields = '__all__'
         read_only_fields = ['fecha_emision', 'total_factura']
-
-# validaciones 
         
         def validate_usuario(self, value):
             if value is None:
@@ -272,4 +270,55 @@ class FacturaSerializer(serializers.ModelSerializer):
             factura.save()
             
             return factura    
-  
+
+###################################################################################################################  
+
+
+class DetallePedidoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DetallePedido
+        fields = '__all__'
+        read_only_fields = ['detalle_pedido_creado', 'detalle_pedido_actualizado', 'subtotal', 'iva', 'total']
+
+    def validate(self, data):
+        cantidad = data.get('cantidad', 1)
+        id_menu = data.get('id_menu')
+        id_promocion = data.get('id_promocion')
+        menu = Menu.objects.get(id=id_menu.id)
+        subtotal = menu.precio * cantidad 
+
+        if id_promocion:
+            promocion = Promocion.objects.filter(id=id_promocion.id, fecha_vencimiento__gt=datetime.now()).first()
+            if promocion:
+                descuento = promocion.descuento / 100 
+                subtotal = subtotal * (1 - descuento)  
+            else:
+                raise serializers.ValidationError("La promoción no es válida o ha expirado.")
+
+        tasa_iva = 0.13
+        iva = round(subtotal * tasa_iva, 2)
+
+        total = round(subtotal + iva, 2)
+
+        data['subtotal'] = subtotal
+        data['iva'] = iva
+        data['total'] = total
+        return data
+
+    def create(self, validated_data):
+        return DetallePedido.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.cantidad = validated_data.get('cantidad', instance.cantidad)
+        instance.id_pedido = validated_data.get('id_pedido', instance.id_pedido)
+        instance.id_menu = validated_data.get('id_menu', instance.id_menu)
+        instance.factura = validated_data.get('factura', instance.factura)
+        instance.id_promocion = validated_data.get('id_promocion', instance.id_promocion)
+
+        validated_data = self.validate(validated_data)
+        instance.subtotal = validated_data['subtotal']
+        instance.iva = validated_data['iva']
+        instance.total = validated_data['total']
+
+        instance.save()
+        return instance

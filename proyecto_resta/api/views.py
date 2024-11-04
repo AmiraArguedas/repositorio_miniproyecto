@@ -1,7 +1,7 @@
 from rest_framework import generics, status
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones, Reserva, Factura
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios, Notificaciones, Reserva, Factura, DetallePedido
 from rest_framework.response import Response
-from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer, MesasSerializer, ComentariosSerializer, NotificacionesSerializer, ReservaSerializer, FacturaSerializer
+from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer, MesasSerializer, ComentariosSerializer, NotificacionesSerializer, ReservaSerializer, FacturaSerializer, DetallePedidoSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 
 
@@ -225,9 +225,25 @@ class FacturaDetail(generics.RetrieveUpdateDestroyAPIView):
         instance.delete()
         return Response({'message': 'Factura eliminada correctamente.'}, status=status.HTTP_204_NO_CONTENT)
 
+##############################################################################################################################
 
 
+class DetallePedidoListCreate(generics.ListCreateAPIView):
 
+    queryset = DetallePedido.objects.all()
+    serializer_class = DetallePedidoSerializer
+
+# Detail
+class DetallePedidoDetail(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = DetallePedido.objects.all()
+    serializer_class = DetallePedidoSerializer
+    
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({'message': 'Detalle de pedido eliminado correctamente.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 
