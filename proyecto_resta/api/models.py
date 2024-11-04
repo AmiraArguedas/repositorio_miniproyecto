@@ -114,7 +114,15 @@ class Mesas(models.Model):
 
 ####################################################################################
 
-
+class Comentarios(models.Model):
+    comentario_creado = models.DateTimeField(auto_now_add=True)
+    comentario_actualizado = models.DateTimeField(auto_now=True)
+    comentario = models.TextField()
+    calificacion = models.IntegerField()
+    id_menu_comentarios = models.ForeignKey(Menu, on_delete=models.CASCADE)
+   
+    def __str__(self):
+        return str(self.comentario)
 
 ####################################################################################
 

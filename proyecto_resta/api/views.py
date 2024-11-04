@@ -1,7 +1,7 @@
 from rest_framework import generics, status
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios
 from rest_framework.response import Response
-from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer, MesasSerializer
+from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer, MesasEstadoSerializer, MesasSerializer, ComentariosSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 
 
@@ -155,7 +155,20 @@ class MesasDetail(generics.RetrieveUpdateDestroyAPIView):
 
 ##############################################################################################################################
 
+class ComentariosListCreate(generics.ListCreateAPIView):
+    queryset = Comentarios.objects.all()
+    serializer_class = ComentariosSerializer
 
+# Detail
+class ComentariosDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comentarios.objects.all()
+    serializer_class = ComentariosSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({'message': 'Comentario eliminado correctamente.'}, status=status.HTTP_204_NO_CONTENT)
+   
 
 ##############################################################################################################################
 

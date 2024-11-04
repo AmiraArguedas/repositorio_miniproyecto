@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from datetime import datetime
 import re
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago, MesasEstado, Mesas, Comentarios
 from django.contrib.auth.models import User, Group
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
@@ -186,7 +186,29 @@ class MesasSerializer(serializers.ModelSerializer):
     
 ################################################################################################################### 
     
+class ComentariosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comentarios
+        fields = '__all__'
+
+# validaciones 
     
+    def validate_comentario(self, value): 
+        if not value: raise serializers.ValidationError("El comentario no puede estar vacío") 
+        if len(value) > 500: # Limitar longitud del comentario 
+            raise serializers.ValidationError("El comentario no puede exceder los 500 caracteres") 
+        return value 
+    
+    def validate_calificacion(self, value): 
+        if value is None: raise serializers.ValidationError("La calificación es obligatoria") 
+        if value < 1 or value > 5: raise serializers.ValidationError("La calificación debe estar entre 1 y 5") 
+        return value 
+    
+    
+    def validate_id_menu_comentarios(self, value): 
+        if not Menu.objects.filter(id=value.id).exists(): 
+            raise serializers.ValidationError("El menú especificado no existe") 
+        return value
         
 ###################################################################################################################
 
