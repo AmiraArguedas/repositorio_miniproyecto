@@ -13,7 +13,8 @@ urlpatterns = [
     path('pedidos/<int:pk>/', views.PedidoDetail.as_view(), name='pedidos-detail'), 
     path('promociones/', views.PromocionListCreate.as_view(), name='promociones-list'), 
     path('promociones/<int:pk>/', views.PromocionDetail.as_view(), name='promociones-detail'), 
-
+    path('metodosdepago/', views.MetodoDePagoListCreate.as_view(), name='metodosdepago-list'),
+    path('metodosdepago/<int:pk>/', views.MetodoDePagoDetail.as_view(), name='metodosdepago-detail'),
 
 
 

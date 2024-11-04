@@ -1,7 +1,7 @@
 from rest_framework import generics
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago
 from rest_framework.response import Response
-from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer
+from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer, PromocionSerializer, MetodoDePagoSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 
 
@@ -87,6 +87,19 @@ class PromocionDetail(generics.RetrieveUpdateDestroyAPIView):
 
 ##############################################################################################################################
 
+class MetodoDePagoListCreate(generics.ListCreateAPIView):
+    queryset = MetodoDePago.objects.all()
+    serializer_class = MetodoDePagoSerializer
+
+
+class MetodoDePagoDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MetodoDePago.objects.all()
+    serializer_class = MetodoDePagoSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({'message': 'Método de pago eliminado correctamente.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 ##############################################################################################################################

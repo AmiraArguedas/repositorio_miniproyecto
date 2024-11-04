@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from datetime import datetime
 import re
-from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido, Promocion, MetodoDePago
 from django.contrib.auth.models import User, Group
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
@@ -132,7 +132,22 @@ class PromocionSerializer(serializers.ModelSerializer):
         
 ###################################################################################################################   
 
+class MetodoDePagoSerializer(serializers.ModelSerializer):
+     class Meta:
+        model = MetodoDePago
+        fields = '__all__'
 
+# validaciones 
+
+        def validate_total_compra(self, value):
+            if value <= 0:
+                raise serializers.ValidationError("El total de la compra debe ser un número positivo.")
+            return value
+
+        def validate(self, attrs):
+            if attrs.get('tipo_pago') == "":
+                raise serializers.ValidationError({"tipo_pago": "El tipo de pago no puede estar vacío."})
+            return attrs
     
 ################################################################################################################### 
     

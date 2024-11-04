@@ -73,7 +73,16 @@ class Promocion(models.Model):
 
 ####################################################################################
 
+class MetodoDePago(models.Model):
+    metodo_pago_creado = models.DateTimeField(auto_now_add=True)
+    metodo_pago_actualizado = models.DateTimeField(auto_now=True)
+    tipo_pago = models.CharField(max_length=50)  
+    fecha_compra = models.DateField()
+    total_compra = models.DecimalField(max_digits=10, decimal_places=2)
 
+
+    def __str__(self):
+        return self.tipo_pag
 
 ####################################################################################
 
