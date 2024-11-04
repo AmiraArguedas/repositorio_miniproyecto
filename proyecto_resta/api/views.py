@@ -1,7 +1,7 @@
 from rest_framework import generics
-from .models import CategoriaMenu, Menu, HistorialEstados
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido
 from rest_framework.response import Response
-from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer
+from .serializers import CategoriaMenuSerializer, UserRegisterSerializer, MenuSerializer, HistorialEstadosSerializer, PedidoSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 
 
@@ -52,13 +52,11 @@ class MenuDetail(generics.RetrieveUpdateDestroyAPIView):
 ##############################################################################################################################
 
 class HistorialEstadosListCreate(generics.ListCreateAPIView):
-
     queryset = HistorialEstados.objects.all()
     serializer_class = HistorialEstadosSerializer
 
 # Detail
 class HistorialEstadosDetail(generics.RetrieveUpdateDestroyAPIView):
-
     queryset = HistorialEstados.objects.all()
     serializer_class = HistorialEstadosSerializer
     
@@ -70,7 +68,13 @@ class HistorialEstadosDetail(generics.RetrieveUpdateDestroyAPIView):
 
 ##############################################################################################################################
 
+class PedidoListCreate(generics.ListCreateAPIView):
+    queryset = Pedido.objects.all()
+    serializer_class = PedidoSerializer
 
+class PedidoDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Pedido.objects.all()
+    serializer_class = PedidoSerializer
 
 ##############################################################################################################################
 

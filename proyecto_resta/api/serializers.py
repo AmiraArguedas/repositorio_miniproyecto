@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 from datetime import datetime
 import re
-from .models import CategoriaMenu, Menu, HistorialEstados
+from .models import CategoriaMenu, Menu, HistorialEstados, Pedido
 from django.contrib.auth.models import User, Group
 
 class CategoriaMenuSerializer(serializers.ModelSerializer):
@@ -108,7 +108,17 @@ class HistorialEstadosSerializer(serializers.ModelSerializer):
         
 ###################################################################################################################
   
-  
+class PedidoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pedido
+        fields = '__all__'
+
+# validaciones 
+
+    def validate_precio(self, value):
+        if value <= 0:
+            raise serializers.values("El precio debe ser mayor a cero")
+        return value
     
 ################################################################################################################### 
     

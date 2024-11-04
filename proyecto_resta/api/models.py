@@ -48,7 +48,14 @@ class HistorialEstados(models.Model):
 
 ####################################################################################
 
+class Pedido(models.Model):
+    pedido_creado = models.DateTimeField(auto_now_add=True)
+    pedido_actualizado = models.DateTimeField(auto_now=True)
+    fecha_pedido = models.DateTimeField(auto_now_add=True)
+    id_estado = models.ForeignKey(HistorialEstados, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"Pedido {self.pk} - Fecha {self.fecha_pedido}"
 
 ####################################################################################
 

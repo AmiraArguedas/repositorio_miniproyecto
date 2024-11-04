@@ -9,5 +9,18 @@ urlpatterns = [
     path('register/', views.UserRegisterView.as_view(), name='user-register'),
     path('historialestados/', views.HistorialEstadosListCreate.as_view(), name='historialestados-list'), 
     path('historialestados/<int:pk>/', views.HistorialEstadosDetail.as_view(), name='historialestados-detail'),
+    path('pedidos/', views.PedidoListCreate.as_view(), name='pedidos-list'), 
+    path('pedidos/<int:pk>/', views.PedidoDetail.as_view(), name='pedidos-detail'), 
+
+
+
+
+
+
+
+
+
+
+
 ]
 
